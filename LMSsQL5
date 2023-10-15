@@ -1,0 +1,14 @@
+CREATE FUNCTION calculate_avg_freight (country_list VARCHAR) RETURNS DECIMAL(10, 2)
+AS
+$$
+DECLARE
+    avg_freight DECIMAL(10, 2);
+BEGIN
+    SELECT AVG(freight) INTO avg_freight
+    FROM shipments
+    WHERE country IN (SELECT unnest(string_to_array(country_list, ',')));
+
+    RETURN avg_freight;
+END;
+$$
+LANGUAGE plpgsql;
